@@ -1,0 +1,138 @@
+name: "oz-local-dev"
+
+networks:
+  nw:
+
+services:  
+  mysql:
+    image: mysql:9.1
+    container_name: mysql
+    stdin_open: true
+    tty: true
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command: ["--max-connections=1000"]
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - nw
+  hazelcast:
+    image: hazelcast/hazelcast:5.4.0
+    container_name: hazelcast
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_started
+    environment:
+      HZ_NETWORK_PUBLICADDRESS: ${HAZELCAST_NETWORK_PUBLICADDRESS}
+      HZ_CLUSTERNAME: ${HAZELCAST_CLUSTERNAME}
+      HZ_NETWORK_RESTAPI_ENABLED: true
+      HZ_NETWORK_RESTAPI_ENDPOINTGROUPS_HEALTHCHECK_ENABLED: true
+    expose:
+      - 5701
+    networks:
+      - nw
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://${HAZELCAST_NETWORK_PUBLICADDRESS}/hazelcast/health"]
+      interval: 2m30s
+      timeout: 10s
+      retries: 3
+      start_period: 3s
+      start_interval: 3s
+  velocity:
+    image: itzg/mc-proxy
+    container_name: velocity
+    depends_on:
+      hazelcast:
+        condition: service_healthy
+    environment:
+      TYPE: VELOCITY
+      DEBUG: "false"
+      REPLACE_ENV_VARIABLES: "true"
+    ports:
+      - "25565:25577"
+    networks:
+      - nw
+    volumes:
+      - ./static-files/forwarding.secret:/config/forwarding.secret:ro
+      - ./static-files/velocity.toml:/config/velocity.toml:ro
+      - ./velocity/proxy-data:/server
+  lobby:
+    build:
+      context: https://github.com/itzg/docker-minecraft-server.git
+      args:
+        BASE_IMAGE: redfoxrr/jbr:latest
+    tty: true
+    stdin_open: true
+    container_name: lobby
+    depends_on:
+      velocity:
+        condition: service_started
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.21.4"
+      MEMORY: "2G"
+      JVM_OPTS: "-Xlog:redefine+class*=info -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005"
+      JVM_XX_OPTS: "-XX:+AllowEnhancedClassRedefinition"
+      ONLINE_MODE: "false"
+      USE_AIKAR_FLAGS: "true"
+      TZ: "Europe/Istanbul"
+      PAPER_PLAYERCONNECTION_KEEPALIVE: "3600"
+      SIMULATION_DISTANCE: "5"
+      VIEW_DISTANCE: "5"
+      LEVEL_TYPE: "flat"
+      SPAWN_PROTECTION: "0"
+      ENFORCE_SECURE_PROFILE: "false"
+      OPS: |-
+        ${OP_PLAYER_USERNAME}
+    ports:
+      - "5005:5005"
+    networks:
+      - nw
+    volumes:
+      - ./lobby/mc-data:/data
+      - ./static-files/paper-global.yml:/config/paper-global.yml
+  channel:
+    build:
+      context: https://github.com/itzg/docker-minecraft-server.git
+      args:
+        BASE_IMAGE: redfoxrr/jbr:latest
+    tty: true
+    stdin_open: true
+    container_name: channel
+    depends_on:
+      velocity:
+        condition: service_started
+    environment:
+      EULA: "TRUE"
+      TYPE: "FOLIA"
+      VERSION: "1.21.4"
+      MEMORY: "4G"
+      JVM_OPTS: "-Xlog:redefine+class*=info -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5006"
+      JVM_XX_OPTS: "-XX:+AllowEnhancedClassRedefinition"
+      ONLINE_MODE: "false"
+      USE_AIKAR_FLAGS: "true"
+      TZ: "Europe/Istanbul"
+      PAPER_PLAYERCONNECTION_KEEPALIVE: "3600"
+      SIMULATION_DISTANCE: "5"
+      VIEW_DISTANCE: "5"
+      LEVEL_TYPE: "flat"
+      SPAWN_PROTECTION: "0"
+      OPS: |-
+        ${OP_PLAYER_USERNAME}
+    ports:
+      - "5006:5006"
+    networks:
+      - nw
+    volumes:
+      - ./channel/mc-data:/data
+      - ./static-files/paper-global.yml:/config/paper-global.yml
