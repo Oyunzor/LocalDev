@@ -31,6 +31,28 @@ services:
       retries: 5
       start_period: 15s
       start_interval: 3s
+  clickhouse:
+    image: clickhouse:latest
+    container_name: clickhouse
+    restart: always
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: ${CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT}
+    ports:
+      - 8123:8123
+    expose:
+      - 8123
+    volumes:
+      - ./clickhouse/data:/var/lib/clickhouse
+      - ./clickhouse/logs:/var/log/clickhouse-server
+    networks:
+      - nw
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
   hazelcast:
     image: hazelcast/hazelcast:latest-slim
     container_name: hazelcast

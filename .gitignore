@@ -2,3 +2,4 @@ channel
 lobby
 velocity
 mysql
+clickhouse
