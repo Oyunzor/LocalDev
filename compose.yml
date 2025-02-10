@@ -115,11 +115,14 @@ services:
       ONLINE_MODE: "false"
       USE_AIKAR_FLAGS: "true"
       TZ: "Europe/Istanbul"
+      MAX_TICK_TIME: "-1"
       PAPER_PLAYERCONNECTION_KEEPALIVE: "3600"
       SIMULATION_DISTANCE: "5"
       VIEW_DISTANCE: "5"
       LEVEL_TYPE: "flat"
       SPAWN_PROTECTION: "0"
+      ALLOW_NETHER: "false"
+      GENERATE_STRUCTURES: "false"
       ENFORCE_SECURE_PROFILE: "false"
       OPS: |-
         ${OP_PLAYER_USERNAME}
@@ -129,6 +132,7 @@ services:
       - nw
     volumes:
       - ./lobby/data:/data
+      - ./static-files/bukkit.yml:/data/bukkit.yml
       - ./static-files/paper-global.yml:/config/paper-global.yml
       - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
   channel:
@@ -152,11 +156,13 @@ services:
       ONLINE_MODE: "false"
       USE_AIKAR_FLAGS: "true"
       TZ: "Europe/Istanbul"
+      MAX_TICK_TIME: "-1"
       PAPER_PLAYERCONNECTION_KEEPALIVE: "3600"
       SIMULATION_DISTANCE: "5"
       VIEW_DISTANCE: "5"
       LEVEL_TYPE: "flat"
       SPAWN_PROTECTION: "0"
+      GENERATE_STRUCTURES: "false"
       OPS: |-
         ${OP_PLAYER_USERNAME}
     ports:
@@ -165,5 +171,6 @@ services:
       - nw
     volumes:
       - ./channel/data:/data
+      - ./static-files/bukkit.yml:/data/bukkit.yml
       - ./static-files/paper-global.yml:/config/paper-global.yml
       - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
