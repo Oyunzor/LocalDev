@@ -94,6 +94,7 @@ services:
       - ./static-files/forwarding.secret:/config/forwarding.secret:ro
       - ./static-files/velocity.toml:/config/velocity.toml:ro
       - ./velocity/data:/server
+      - ./velocity/plugins:/plugins:ro
   lobby:
     build:
       context: https://github.com/itzg/docker-minecraft-server.git
@@ -131,10 +132,11 @@ services:
     networks:
       - nw
     volumes:
-      - ./lobby/data:/data
       - ./static-files/bukkit.yml:/data/bukkit.yml
       - ./static-files/paper-global.yml:/config/paper-global.yml
       - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
+      - ./lobby/data:/data
+      - ./lobby/plugins:/plugins:ro
   channel:
     build:
       context: https://github.com/itzg/docker-minecraft-server.git
@@ -170,7 +172,8 @@ services:
     networks:
       - nw
     volumes:
-      - ./channel/data:/data
       - ./static-files/bukkit.yml:/data/bukkit.yml
       - ./static-files/paper-global.yml:/config/paper-global.yml
       - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
+      - ./channel/data:/data
+      - ./channel/plugins:/plugins:ro
