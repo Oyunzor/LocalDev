@@ -21,7 +21,7 @@ services:
     expose:
       - 3306
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
     networks:
       - nw
   hazelcast:
@@ -64,7 +64,7 @@ services:
     volumes:
       - ./static-files/forwarding.secret:/config/forwarding.secret:ro
       - ./static-files/velocity.toml:/config/velocity.toml:ro
-      - ./velocity/proxy-data:/server
+      - ./velocity/data:/server
   lobby:
     build:
       context: https://github.com/itzg/docker-minecraft-server.git
@@ -99,7 +99,7 @@ services:
     networks:
       - nw
     volumes:
-      - ./lobby/mc-data:/data
+      - ./lobby/data:/data
       - ./static-files/paper-global.yml:/config/paper-global.yml
   channel:
     build:
@@ -134,5 +134,5 @@ services:
     networks:
       - nw
     volumes:
-      - ./channel/mc-data:/data
+      - ./channel/data:/data
       - ./static-files/paper-global.yml:/config/paper-global.yml

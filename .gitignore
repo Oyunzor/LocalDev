@@ -1,4 +1,4 @@
-channel/mc-data
-lobby/mc-data
-velocity/proxy-data
-mysql-data
+channel
+lobby
+velocity
+mysql
