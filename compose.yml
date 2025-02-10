@@ -52,7 +52,7 @@ services:
       interval: 2m30s
       timeout: 10s
       retries: 3
-      start_period: 3s
+      start_period: 10s
       start_interval: 3s
   velocity:
     image: itzg/mc-proxy
