@@ -1,0 +1,22 @@
+databases:
+  mysql_oyunzor_survival:
+    type: mysql
+    host: mysql
+    port: 3306
+    database: oyunzor_survival
+    username: oyunzor
+    password: ozlocaldev123
+
+  log_db:
+    type: clickhouse
+    host: clickhouse
+    port: 8123
+    database: oyunzor_global
+    username: oyunzor
+    password: ozlocaldev123
+
+  cache_db:
+    type: hazelcast
+    address: localhost
+    port: 5701
+    cluster-name: oyunzor-survival

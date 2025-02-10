@@ -130,6 +130,7 @@ services:
     volumes:
       - ./lobby/data:/data
       - ./static-files/paper-global.yml:/config/paper-global.yml
+      - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
   channel:
     build:
       context: https://github.com/itzg/docker-minecraft-server.git
@@ -165,3 +166,4 @@ services:
     volumes:
       - ./channel/data:/data
       - ./static-files/paper-global.yml:/config/paper-global.yml
+      - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
