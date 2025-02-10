@@ -24,13 +24,20 @@ services:
       - ./mysql/data:/var/lib/mysql
     networks:
       - nw
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2m30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+      start_interval: 3s
   hazelcast:
     image: hazelcast/hazelcast:5.4.0
     container_name: hazelcast
     restart: always
     depends_on:
       mysql:
-        condition: service_started
+        condition: service_healthy
     environment:
       HZ_NETWORK_PUBLICADDRESS: ${HAZELCAST_NETWORK_PUBLICADDRESS}
       HZ_CLUSTERNAME: ${HAZELCAST_CLUSTERNAME}
