@@ -7,7 +7,7 @@ databases:
     username: oyunzor
     password: ozlocaldev123
 
-  log_db:
+  clickhouse_log:
     type: clickhouse
     host: clickhouse
     port: 8123
@@ -15,7 +15,7 @@ databases:
     username: oyunzor
     password: ozlocaldev123
 
-  cache_db:
+  hazelcast_cache:
     type: hazelcast
     address: localhost
     port: 5701
