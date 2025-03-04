@@ -129,7 +129,7 @@ services:
       OPS: |-
         ${OP_PLAYER_USERNAME}
     ports:
-      - "5005:5005"
+      - 5005:5005
     networks:
       - nw
     volumes:
@@ -154,7 +154,7 @@ services:
       TYPE: "FOLIA"
       VERSION: "1.21.4"
       MEMORY: "4G"
-      JVM_OPTS: "-Xlog:redefine+class*=info -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5006"
+      JVM_OPTS: "-Xlog:redefine+class*=info -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005"
       JVM_XX_OPTS: "-XX:+AllowEnhancedClassRedefinition"
       ONLINE_MODE: "false"
       USE_AIKAR_FLAGS: "true"
@@ -170,7 +170,7 @@ services:
       OPS: |-
         ${OP_PLAYER_USERNAME}
     ports:
-      - "5006:5006"
+      - 5006:5005
     networks:
       - nw
     volumes:
@@ -179,3 +179,42 @@ services:
       - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
       - ./channel/data:/data
       - ./channel/plugins:/plugins:ro
+  end:
+    build:
+      context: https://github.com/itzg/docker-minecraft-server.git
+      args:
+        BASE_IMAGE: redfoxrr/jbr:latest
+    tty: true
+    stdin_open: true
+    container_name: end
+    depends_on:
+      velocity:
+        condition: service_started
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.21.4"
+      MEMORY: "2G"
+      JVM_OPTS: "-Xlog:redefine+class*=info -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005"
+      JVM_XX_OPTS: "-XX:+AllowEnhancedClassRedefinition"
+      ONLINE_MODE: "false"
+      USE_AIKAR_FLAGS: "true"
+      TZ: "Europe/Istanbul"
+      REMOVE_OLD_MODS: "true"
+      MAX_TICK_TIME: "-1"
+      PAPER_PLAYERCONNECTION_KEEPALIVE: "3600"
+      SIMULATION_DISTANCE: "5"
+      VIEW_DISTANCE: "5"
+      SPAWN_PROTECTION: "0"
+      OPS: |-
+        ${OP_PLAYER_USERNAME}
+    ports:
+      - 5007:5005
+    networks:
+      - nw
+    volumes:
+      - ./static-files/bukkit-end.yml:/data/bukkit.yml
+      - ./static-files/paper-global.yml:/config/paper-global.yml
+      - ./static-files/oyunzor-config.yml:/config/oyunzor-config.yml
+      - ./end/data:/data
+      - ./end/plugins:/plugins:ro
