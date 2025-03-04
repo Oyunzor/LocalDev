@@ -207,6 +207,7 @@ services:
       VIEW_DISTANCE: "5"
       LEVEL_TYPE: "flat"
       SPAWN_PROTECTION: "0"
+      ALLOW_NETHER: "false"
       OPS: |-
         ${OP_PLAYER_USERNAME}
     ports:
