@@ -205,6 +205,7 @@ services:
       PAPER_PLAYERCONNECTION_KEEPALIVE: "3600"
       SIMULATION_DISTANCE: "5"
       VIEW_DISTANCE: "5"
+      LEVEL_TYPE: "flat"
       SPAWN_PROTECTION: "0"
       OPS: |-
         ${OP_PLAYER_USERNAME}
