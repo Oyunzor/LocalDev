@@ -54,7 +54,7 @@ services:
         limits:
           cpus: '0.50'
   hazelcast:
-    image: hazelcast/hazelcast:latest-slim
+    image: hazelcast/hazelcast:latest
     container_name: hazelcast
     restart: always
     depends_on:
